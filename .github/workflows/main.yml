@@ -64,6 +64,6 @@ jobs:
 
         - name: Upload Release APK
           run: |
-            gh release upload ${{ github.ref }} app/build/outputs/apk/**/*.apk
+            gh release upload ${{ github.event.release.name }} app/build/outputs/apk/**/*.apk
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
