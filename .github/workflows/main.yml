@@ -1,6 +1,11 @@
 name: Android CI
 
-on: [push, release]
+on:
+  push:
+    tags-ignore:
+      - '*'
+  release:
+    types: [created]
 
 jobs:
     build:
