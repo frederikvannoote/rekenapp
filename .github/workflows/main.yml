@@ -1,6 +1,6 @@
 name: Android CI
 
-on: [push]
+on: [push, release]
 
 jobs:
     build:
@@ -34,3 +34,20 @@ jobs:
           with:
             name: app-apk
             path: app/build/outputs/apk/**/*.apk
+
+    gh-release:
+        if: github.event_name == 'release'
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+        - name: Download APK artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: app-apk
+            path: app/build/outputs/apk
+
+        - name: Upload Release APK
+          run: |
+            gh release create ${{ github.ref }} app/build/outputs/apk/**/*.apk --title "Release ${{ github.ref }}" --notes "Automated release of the APK."
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
